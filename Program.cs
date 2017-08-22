@@ -1,13 +1,20 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Microsoft.Win32;
+using System.Xml.Linq;
 
 namespace SoundBlasterCinemaProfilesSwitch
 {
     class Program
     {
+        /* Problemes
+         * Id are not in the order of files.
+         * Soit on met les ID fixes pour les trois profiles par defaut
+         * Soit on va chercher dans tous les fichiers xml existant le profile_id ce qui augmente la durée du démarrage du soft
+         * */
         private static void Main(string[] args)
         {
             WarningTitle();
@@ -16,6 +23,7 @@ namespace SoundBlasterCinemaProfilesSwitch
             int profileChoice = GetProfileChoice(i);
             SetRegistryValue(profileChoice, i);
             LaunchProcess();
+            Console.WriteLine("Press Enter to close the console");
             Console.ReadLine();
         }
 
@@ -31,7 +39,7 @@ namespace SoundBlasterCinemaProfilesSwitch
              ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═══╝ ╚═════╝                           
                                                                                     
             This will modify a value in the Windows Registry. 
-            Although this will be faily safe, please do backup your registry first !                                                                                                                                     
+            Although this will be faily safe, please do backup your registry base first !                                                                                                                                     
             ";
             Console.WriteLine(attention);
         }
@@ -47,17 +55,31 @@ namespace SoundBlasterCinemaProfilesSwitch
                 var files = from file in Directory.EnumerateFiles(sourceDirectory, "*.xml", SearchOption.AllDirectories) select file;
 
                 Console.WriteLine("========================================================================================================================");
-                int i = -1;
+                SortedDictionary<int, string> profilesDictionary = new SortedDictionary<int, string>();
                 foreach (var file in files)
                 {
-                    i++;
                     string fileName = file.Substring(sourceDirectory.Length + 1);
-                    Console.WriteLine(i + " {0}", fileName);
+
+                    foreach (XElement infoElement in XElement.Load(file).Elements("info"))
+                    {
+                        foreach (XElement profileId in infoElement.Elements("profile_id"))
+                        {
+                            profilesDictionary.Add(int.Parse(profileId.Value), fileName);
+                        }
+                    }
+
+                    //profilesDictionary[int.Parse(element.ToString())] = fileName;
+                }
+                foreach (KeyValuePair<int, string> profile in profilesDictionary.OrderBy(key => key.Key))
+                {
+
+                    Console.WriteLine("Choice : {0}, file : {1}", profile.Key, profile.Value);
+
                 }
                 Console.WriteLine("========================================================================================================================");
                 Console.WriteLine("{0} profiles found in the " + sourceDirectory + " folder.", files.Count<string>().ToString());
 
-                return i;
+                return profilesDictionary.Count;
             }
             catch (Exception e)
             {
@@ -72,12 +94,13 @@ namespace SoundBlasterCinemaProfilesSwitch
             string userEntry;
             do
             {
-                Console.WriteLine("Enter the number for the wanted profile (0-" + i + ")");
+                Console.WriteLine("Enter the number for the wanted profile (1-" + i + ")");
                 userEntry = Console.ReadLine();
             }
             while (!int.TryParse(userEntry, out profileChoice));
 
-            return profileChoice;
+            //We remove one because the index start at 0 in the registry profileIndex but start at 1 in the xml file
+            return profileChoice -1;
         }
 
         private static void TerminateProcess()
@@ -88,12 +111,9 @@ namespace SoundBlasterCinemaProfilesSwitch
             {
                 foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension("SBCinema")))
                 {
-                    Console.WriteLine(process.ProcessName);
+                    Console.WriteLine("Process name : " + process.ProcessName);
                     process.Kill();
-                    if (!process.HasExited)
-                    {
-                        Console.WriteLine("Process not terminated");
-                    }
+                    Console.WriteLine(!process.HasExited ? "Process not terminated" : "Process terminated");
                 }
             }
             catch (Exception e)
