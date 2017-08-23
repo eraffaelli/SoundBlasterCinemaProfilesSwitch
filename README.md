@@ -11,9 +11,10 @@ Sound Blaster Cinema 1 solutions for Windows 10 problems.
             These programs will modify a value in the Windows Registry. 
             Although this will be faily safe, please do backup your registry base first !  
 			
-# Legal : 
+# Legal
 This software is provided "as is" and I am not responsible for any damage possibly caused by it.
 
+# Repository
 In this repository you'll find three things :
 
 - A list of many method to try running Sound Blaster Cinema.
@@ -22,15 +23,15 @@ In this repository you'll find three things :
 	- A source code **Program.cs** which correspond of the source for the SoundBlasterCinemaProfilesSwitch.exe of the release. Feel free to compile it yourself and check if you prefer for your safety ;) This program is the easiest way to change the profile without having you manually edit the registry base.
 
 
-#Commons solutions
+## Commons solutions
 
-##The first solution to try
-##Sound Blaster Cinema freeze at launch or after launching
+### The first solution to try
+#### Sound Blaster Cinema freeze at launch or after launching
 
 You'll need to delete or move the file ```C:\Program Files (x86)\Creative\Sound Blaster Cinema\Sound Blaster Cinema\SBCinema.exe.config```
 
 
-#The program
+## The program
 
 If like me after installing the Windows 10 Creator Update you have can't make Sound Blaster Cinema work, the only way to change the profile is to do it manually editing the registry base. To make this process faster and easier, I've wrote a program for that.
 
