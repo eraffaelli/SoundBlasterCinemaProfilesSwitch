@@ -9,7 +9,7 @@ Sound Blaster Cinema 1 solutions for Windows 10 problems.
              ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═══╝ ╚═════╝                           
                                                                                     
             These programs will modify a value in the Windows Registry. 
-            Although this will be faily safe, please do backup your registry base first !  
+            Although this will be fairly safe, please do backup your registry base first !  
 			
 # Legal
 This software is provided "as is" and I am not responsible for any damage possibly caused by it.
