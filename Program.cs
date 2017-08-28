@@ -10,11 +10,6 @@ namespace SoundBlasterCinemaProfilesSwitch
 {
     class Program
     {
-        /* Problemes
-         * Id are not in the order of files.
-         * Soit on met les ID fixes pour les trois profiles par defaut
-         * Soit on va chercher dans tous les fichiers xml existant le profile_id ce qui augmente la durée du démarrage du soft
-         * */
         private static void Main(string[] args)
         {
             WarningTitle();
@@ -67,8 +62,6 @@ namespace SoundBlasterCinemaProfilesSwitch
                             profilesDictionary.Add(int.Parse(profileId.Value), fileName);
                         }
                     }
-
-                    //profilesDictionary[int.Parse(element.ToString())] = fileName;
                 }
                 foreach (KeyValuePair<int, string> profile in profilesDictionary.OrderBy(key => key.Key))
                 {
